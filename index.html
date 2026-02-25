@@ -15,6 +15,460 @@
             --border-color: #cbd5e1;
             --danger-text: #dc2626;
             --info-text: #2563eb;
+            --highlight-bg: #fef08a; 
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 900px;
+            box-sizing: border-box;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-end; /* Align inputs properly */
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .input-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-muted);
+        }
+
+        .input-group input {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+
+        /* Placeholder styling */
+        ::placeholder {
+            color: #94a3b8;
+            opacity: 1;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .btn-primary { background-color: var(--primary-color); color: white; }
+        .btn-secondary { background-color: #10b981; color: white; }
+        .btn-outline { background-color: white; border: 1px solid var(--border-color); color: var(--text-main); }
+
+        /* Simulator Area */
+        .simulator-container {
+            display: none; 
+            background-color: var(--card-bg);
+            padding: 25px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            width: 100%;
+            max-width: 900px;
+            box-sizing: border-box;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            position: relative; 
+        }
+
+        .sim-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .sim-label {
+            font-weight: 600;
+            width: 180px;
+            font-size: 0.9rem;
+        }
+
+        .sim-input {
+            padding: 6px 10px;
+            border: 1px solid #94a3b8;
+            border-radius: 4px;
+            background-color: #fff;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+
+        .sim-input.read-only { background-color: #f8fafc; color: #334155; }
+        
+        .highlight-data {
+            background-color: var(--highlight-bg) !important;
+            color: #000 !important;
+            font-weight: bold;
+            border-color: #eab308 !important;
+        }
+
+        .text-red { color: var(--danger-text); font-size: 0.85rem; }
+        .text-blue { color: var(--info-text); font-weight: 600; font-size: 0.85rem; }
+        
+        .instructions-box {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            margin: 15px 0;
+            background-color: #fff;
+        }
+
+        .instructions-box p {
+            margin: 5px 0;
+            font-size: 0.85rem;
+            color: var(--danger-text);
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 5px;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px; 
+        }
+
+        .data-table th {
+            background-color: #0284c7;
+            color: white;
+            text-align: left;
+            padding: 8px;
+            font-size: 0.85rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .data-table td {
+            padding: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .data-table input { width: 100px; box-sizing: border-box; }
+
+        @media (max-width: 600px) {
+            .sim-row { flex-direction: column; align-items: flex-start; }
+            .sim-label { width: 100%; margin-bottom: 2px; }
+            .sim-input { width: 100% !important; max-width: 100%; }
+            .btn-group button { flex: 1 1 100%; }
+            .flex-wrapper { width: 100%; display: flex; flex-direction: column; gap: 5px;}
+        }
+
+        @media print {
+            body { 
+                background-color: white !important; 
+                padding: 0 !important; 
+                margin: 0 !important; 
+            }
+            .control-panel { display: none !important; }
+            .simulator-container { 
+                display: block !important; 
+                box-shadow: none !important; 
+                border: none !important; 
+                padding: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+            .table-responsive { overflow: visible !important; }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="control-panel" id="control-panel">
+        <div class="input-group">
+            <label for="inputSlip">Slip No</label>
+            <input type="text" id="inputSlip" placeholder="e.g. 3123123123213">
+        </div>
+        <div class="input-group">
+            <label for="inputDate">Effective (From) Date</label>
+            <input type="text" id="inputDate" placeholder="e.g. 02/01/2026" onfocus="(this.type='date')" onblur="if(!this.value) this.type='text'">
+        </div>
+        <div class="input-group">
+            <label for="inputDays">No of Days (ELS)</label>
+            <input type="number" id="inputDays" placeholder="e.g. 30">
+        </div>
+        
+        <div class="btn-group">
+            <button class="btn-primary" onclick="generateData()">⚙️ Generate</button>
+            <button class="btn-outline" onclick="window.print()">🖨️ Print / PDF</button>
+            <button class="btn-secondary" onclick="downloadImage()">📸 Download Image</button>
+        </div>
+    </div>
+
+    <div class="simulator-container" id="capture-area">
+        
+        <div class="sim-row" style="justify-content: space-between;">
+            <div class="flex-wrapper">
+                <span class="sim-label">Year</span>
+                <input type="text" id="simYear" class="sim-input read-only" style="width: 80px;" readonly>
+            </div>
+            <div class="flex-wrapper">
+                <span class="sim-label" style="width: auto;">Month</span>
+                <select id="simMonth" class="sim-input" style="width: 120px;" disabled>
+                    <option value="January">January</option>
+                    <option value="February">February</option>
+                    <option value="March">March</option>
+                    <option value="April">April</option>
+                    <option value="May">May</option>
+                    <option value="June">June</option>
+                    <option value="July">July</option>
+                    <option value="August">August</option>
+                    <option value="September">September</option>
+                    <option value="October">October</option>
+                    <option value="November">November</option>
+                    <option value="December">December</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="sim-row" style="justify-content: space-between;">
+            <div class="flex-wrapper">
+                <span class="sim-label">Sanction No.</span>
+                <input type="text" id="simSanctionNo" class="sim-input read-only" style="width: 250px;" readonly>
+            </div>
+            <div class="flex-wrapper">
+                <span class="sim-label" style="width: auto;">Sanction Date</span>
+                <input type="text" id="simSanctionDate" class="sim-input read-only" style="width: 120px;" readonly>
+            </div>
+        </div>
+
+        <div class="sim-row">
+            <span class="sim-label">G.O No and Date</span>
+            <input type="text" class="sim-input" style="width: 100%; max-width: 500px;" value="GO(P) No 145/2006/Fin dated 25/03/2006">
+        </div>
+
+        <div class="sim-row">
+            <span class="sim-label">Surrender Type</span>
+            <div>
+                <label style="margin-right: 15px;"><input type="radio" checked> Regular(Periodical) Surrender</label>
+                <label><input type="radio" disabled> LTC Surrender</label>
+            </div>
+        </div>
+
+        <div class="sim-row">
+            <label style="display: flex; align-items: center; font-weight: 600; font-size: 0.9rem;">
+                <input type="checkbox" style="margin-right: 10px;"> 
+                Include employees Retired in the month/year
+            </label>
+            <select class="sim-input" style="width: 100px; margin-left: 10px;" disabled>
+                <option>--select--</option>
+            </select>
+            <input type="text" class="sim-input read-only" style="width: 80px; margin-left: 10px;" disabled>
+        </div>
+
+        <div class="sim-row" style="flex-direction: column; align-items: flex-start;">
+            <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 10px; width: 100%;">
+                <span class="sim-label" style="width: auto;">Amount to be Credited to PF<span class="text-red">*</span></span>
+                <div>
+                    <label style="margin-right: 15px;"><input type="radio" checked> Yes</label>
+                    <label><input type="radio" disabled> No</label>
+                </div>
+            </div>
+            <div class="text-blue">(Employees will be listed based on this criteria)</div>
+        </div>
+
+        <div class="instructions-box">
+            <p style="color: #991b1b; font-weight: 600;">This Surrender amount will be credited to PF and can be withdrawn after the locking period 31/03/2029</p>
+            <p>Last Grade servants, Office Attendants and Part-time Contingent Employees will be listed in both the options as some of them may want to deposit to PF.</p>
+            <p>Those Employees who have already surrendered leave during the Current Financial Year will be excluded (based on 'as on date') from the List. Leave surrender will be encashed for Last Grade Servants, Office Attendants in Subordinate Services and Part-time Contingent Employees as per G.O.(P) No.42/2020/Fin dated 16.04.2020. For others, it will be credited to respective PF Account as per G.O.(P) No.152/2020/Fin dated 05/11/2020.</p>
+            <p>DDOs should ensure that only the eligible employees are sanctioned Leave surrender to the Bank / Treasury Account. Failing the same will be treated as the personal liability of the DDO concerned.</p>
+        </div>
+
+        <label style="display: flex; align-items: center; gap: 5px; font-weight: 600; color: #1e3a8a; font-size: 0.9rem; margin-bottom: 15px;">
+            <input type="checkbox" checked onclick="return false;"> Above condition has been verified and found correct.
+        </label>
+
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Empcd</th>
+                        <th>Application Date</th>
+                        <th>No of Days</th>
+                        <th>As on Date</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <select class="sim-input" style="width: 100%; min-width: 100px;">
+                                <option>---Select---</option>
+                            </select>
+                        </td>
+                        <td><input type="text" id="simAppDate" class="sim-input read-only" readonly></td>
+                        <td><input type="text" id="simDays" class="sim-input read-only" readonly></td>
+                        <td><input type="text" id="simAsOnDate" class="sim-input read-only" readonly></td>
+                        <td><a href="#" style="color: blue; text-decoration: underline; font-size: 0.85rem;">Insert</a></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" style="font-size: 0.85rem; color: #64748b;">1</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function formatDate(date) {
+            let d = date.getDate().toString().padStart(2, '0');
+            let m = (date.getMonth() + 1).toString().padStart(2, '0');
+            let y = date.getFullYear();
+            return `${d}/${m}/${y}`;
+        }
+
+        function generateData() {
+            const slipNo = document.getElementById('inputSlip').value;
+            const effDateInput = document.getElementById('inputDate').value;
+            const noOfDays = document.getElementById('inputDays').value;
+
+            // Validation
+            if (!slipNo || !effDateInput || !noOfDays) {
+                alert("Please fill in all the details (Slip No, Effective Date, and No of Days).");
+                return;
+            }
+
+            document.getElementById('capture-area').style.display = 'block';
+
+            const effDate = new Date(effDateInput);
+
+            const elYear = document.getElementById('simYear');
+            const elMonth = document.getElementById('simMonth');
+            const elSanctionNo = document.getElementById('simSanctionNo');
+            const elSanctionDate = document.getElementById('simSanctionDate');
+            const elAppDate = document.getElementById('simAppDate');
+            const elDays = document.getElementById('simDays');
+            const elAsOnDate = document.getElementById('simAsOnDate');
+
+            elYear.value = effDate.getFullYear();
+            
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            elMonth.value = monthNames[effDate.getMonth()];
+
+            elSanctionNo.value = slipNo;
+
+            const sanctionDate = new Date(effDate.getFullYear(), effDate.getMonth() + 1, 0);
+            elSanctionDate.value = formatDate(sanctionDate);
+
+            const appDate = new Date(effDate);
+            appDate.setDate(effDate.getDate() - 1);
+            elAppDate.value = formatDate(appDate);
+
+            elDays.value = noOfDays;
+            elAsOnDate.value = formatDate(effDate);
+
+            const generatedFields = [elYear, elMonth, elSanctionNo, elSanctionDate, elAppDate, elDays, elAsOnDate];
+            generatedFields.forEach(field => field.classList.add('highlight-data'));
+        }
+
+        function downloadImage() {
+            const captureArea = document.getElementById('capture-area');
+            
+            if(captureArea.style.display === 'none' || captureArea.style.display === '') {
+                alert("Please click 'Generate' first!");
+                return;
+            }
+
+            const originalWidth = captureArea.style.width;
+            const originalMaxWidth = captureArea.style.maxWidth;
+            const originalPosition = captureArea.style.position;
+            const originalBg = captureArea.style.backgroundColor;
+
+            captureArea.style.width = '900px';
+            captureArea.style.maxWidth = '900px';
+            captureArea.style.position = 'absolute'; 
+            captureArea.style.backgroundColor = '#ffffff'; 
+
+            setTimeout(() => {
+                html2canvas(captureArea, { 
+                    scale: 2, 
+                    useCORS: true,
+                    windowWidth: 900 
+                }).then(canvas => {
+                    captureArea.style.width = originalWidth;
+                    captureArea.style.maxWidth = originalMaxWidth;
+                    captureArea.style.position = originalPosition;
+                    captureArea.style.backgroundColor = originalBg;
+                    
+                    const link = document.createElement('a');
+                    link.download = 'ELS_Data_Entry.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                }).catch(err => {
+                    captureArea.style.width = originalWidth;
+                    captureArea.style.maxWidth = originalMaxWidth;
+                    captureArea.style.position = originalPosition;
+                    captureArea.style.backgroundColor = originalBg;
+                    console.error("Image generation error", err);
+                });
+            }, 100);
+        }
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gazetted ELS Data Entry Simulator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --danger-text: #dc2626;
+            --info-text: #2563eb;
             --highlight-bg: #fef08a; /* Yellow highlight */
         }
 
@@ -223,7 +677,7 @@
     <div class="control-panel" id="control-panel">
         <div class="input-group">
             <label for="inputSlip">Slip No</label>
-            <input type="text" id="inputSlip" placeholder="e.g. 3123123123213">
+            <input type="text" id="inputSlip" placeholder="e.g. 2026021501536247">
         </div>
         <div class="input-group">
             <label for="inputDate">Effective (From) Date</label>
