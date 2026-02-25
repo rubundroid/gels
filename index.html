@@ -42,7 +42,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
-            align-items: flex-end; /* Align inputs properly */
+            align-items: flex-end;
         }
 
         .input-group {
@@ -67,7 +67,6 @@
             color: var(--text-main);
         }
 
-        /* Placeholder styling */
         ::placeholder {
             color: #94a3b8;
             opacity: 1;
@@ -224,15 +223,15 @@
     <div class="control-panel" id="control-panel">
         <div class="input-group">
             <label for="inputSlip">Slip No</label>
-            <input type="text" id="inputSlip" placeholder="e.g. 202602150548967">
+            <input type="text" id="inputSlip" placeholder="e.g. 202602150328124">
         </div>
         <div class="input-group">
             <label for="inputDate">Effective (From) Date</label>
-            <input type="text" id="inputDate" placeholder="e.g. 02/01/2026" onfocus="(this.type='date')" onblur="if(!this.value) this.type='text'">
+            <input type="text" id="inputDate" placeholder="e.g. 02/01/2026" onfocus="enableDatePicker(this)" onblur="if(!this.value) this.type='text'">
         </div>
         <div class="input-group">
             <label for="inputDays">No of Days (ELS)</label>
-            <input type="number" id="inputDays" placeholder="e.g. 30">
+            <input type="number" id="inputDays" min="1" max="30" placeholder="e.g. 30">
         </div>
         
         <div class="btn-group">
@@ -357,6 +356,17 @@
     </div>
 
     <script>
+        // Set maximum date constraint dynamically
+        function enableDatePicker(element) {
+            element.type = 'date';
+            const today = new Date();
+            // Format to YYYY-MM-DD for the max attribute
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            element.setAttribute('max', `${yyyy}-${mm}-${dd}`);
+        }
+
         function formatDate(date) {
             let d = date.getDate().toString().padStart(2, '0');
             let m = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -369,15 +379,32 @@
             const effDateInput = document.getElementById('inputDate').value;
             const noOfDays = document.getElementById('inputDays').value;
 
-            // Validation
+            // Simple validation
             if (!slipNo || !effDateInput || !noOfDays) {
                 alert("Please fill in all the details (Slip No, Effective Date, and No of Days).");
                 return;
             }
 
-            document.getElementById('capture-area').style.display = 'block';
+            // Validation: No of days
+            const daysInt = parseInt(noOfDays);
+            if (daysInt < 1 || daysInt > 30) {
+                alert("Number of days must be between 1 and 30.");
+                return;
+            }
 
             const effDate = new Date(effDateInput);
+            const today = new Date();
+            // Reset time part of today's date for accurate date comparison
+            today.setHours(0, 0, 0, 0); 
+            effDate.setHours(0, 0, 0, 0);
+
+            // Validation: Future Date Check
+            if (effDate > today) {
+                alert("Effective date cannot be a future date.");
+                return;
+            }
+
+            document.getElementById('capture-area').style.display = 'block';
 
             const elYear = document.getElementById('simYear');
             const elMonth = document.getElementById('simMonth');
@@ -394,14 +421,22 @@
 
             elSanctionNo.value = slipNo;
 
-            const sanctionDate = new Date(effDate.getFullYear(), effDate.getMonth() + 1, 0);
+            // Logic: Dynamic Sanction Date
+            let sanctionDate;
+            if (effDate.getMonth() === today.getMonth() && effDate.getFullYear() === today.getFullYear()) {
+                // If the selected date is in the current month, Sanction Date is today
+                sanctionDate = new Date(today);
+            } else {
+                // Otherwise, Sanction Date is the last day of the selected month
+                sanctionDate = new Date(effDate.getFullYear(), effDate.getMonth() + 1, 0);
+            }
             elSanctionDate.value = formatDate(sanctionDate);
 
             const appDate = new Date(effDate);
             appDate.setDate(effDate.getDate() - 1);
             elAppDate.value = formatDate(appDate);
 
-            elDays.value = noOfDays;
+            elDays.value = daysInt;
             elAsOnDate.value = formatDate(effDate);
 
             const generatedFields = [elYear, elMonth, elSanctionNo, elSanctionDate, elAppDate, elDays, elAsOnDate];
