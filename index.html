@@ -42,7 +42,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
-            align-items: flex-end;
+            align-items: flex-start;
         }
 
         .input-group {
@@ -64,6 +64,12 @@
             border: 1px solid var(--border-color);
             border-radius: 6px;
             font-size: 1rem;
+        }
+
+        .input-hint {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 4px;
         }
 
         .btn-group {
@@ -100,7 +106,7 @@
             max-width: 900px;
             box-sizing: border-box;
             box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
-            position: relative; /* For rendering context */
+            position: relative; 
         }
 
         .sim-row {
@@ -189,7 +195,6 @@
             .flex-wrapper { width: 100%; display: flex; flex-direction: column; gap: 5px;}
         }
 
-        /* Print CSS - Optimized for external hosting */
         @media print {
             body { 
                 background-color: white !important; 
@@ -218,15 +223,16 @@
     <div class="control-panel" id="control-panel">
         <div class="input-group">
             <label for="inputSlip">Slip No</label>
-            <input type="text" id="inputSlip" placeholder="Enter Slip No" value="3123123123213">
+            <input type="text" id="inputSlip" placeholder="e.g. 3123123123213">
         </div>
         <div class="input-group">
             <label for="inputDate">Effective (From) Date</label>
             <input type="date" id="inputDate">
+            <span class="input-hint">Example: 02/01/2026</span>
         </div>
         <div class="input-group">
             <label for="inputDays">No of Days (ELS)</label>
-            <input type="number" id="inputDays" placeholder="Enter Days" value="30">
+            <input type="number" id="inputDays" placeholder="e.g. 30">
         </div>
         
         <div class="btn-group">
@@ -351,10 +357,6 @@
     </div>
 
     <script>
-        window.onload = function() {
-            document.getElementById('inputDate').valueAsDate = new Date();
-        };
-
         function formatDate(date) {
             let d = date.getDate().toString().padStart(2, '0');
             let m = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -367,8 +369,9 @@
             const effDateInput = document.getElementById('inputDate').value;
             const noOfDays = document.getElementById('inputDays').value;
 
-            if (!effDateInput) {
-                alert("Please select an Effective Date.");
+            // Simple validation
+            if (!slipNo || !effDateInput || !noOfDays) {
+                alert("Please fill in all the details (Slip No, Effective Date, and No of Days).");
                 return;
             }
 
@@ -405,7 +408,6 @@
             generatedFields.forEach(field => field.classList.add('highlight-data'));
         }
 
-        // PERFECT MOBILE IMAGE FIX
         function downloadImage() {
             const captureArea = document.getElementById('capture-area');
             
@@ -414,38 +416,32 @@
                 return;
             }
 
-            // 1. Save original responsive styles
             const originalWidth = captureArea.style.width;
             const originalMaxWidth = captureArea.style.maxWidth;
             const originalPosition = captureArea.style.position;
             const originalBg = captureArea.style.backgroundColor;
 
-            // 2. Force desktop width temporarily so mobile doesn't wrap/crop the layout
             captureArea.style.width = '900px';
             captureArea.style.maxWidth = '900px';
-            captureArea.style.position = 'absolute'; // Prevents layout jumping visible to user
+            captureArea.style.position = 'absolute'; 
             captureArea.style.backgroundColor = '#ffffff'; 
 
-            // Allow the browser a tiny moment to apply styles before capturing
             setTimeout(() => {
                 html2canvas(captureArea, { 
-                    scale: 2, // Good quality
+                    scale: 2, 
                     useCORS: true,
-                    windowWidth: 900 // Tell html2canvas to act like a 900px screen
+                    windowWidth: 900 
                 }).then(canvas => {
-                    // 3. Restore original styles immediately
                     captureArea.style.width = originalWidth;
                     captureArea.style.maxWidth = originalMaxWidth;
                     captureArea.style.position = originalPosition;
                     captureArea.style.backgroundColor = originalBg;
                     
-                    // 4. Download
                     const link = document.createElement('a');
                     link.download = 'ELS_Data_Entry.png';
                     link.href = canvas.toDataURL('image/png');
                     link.click();
                 }).catch(err => {
-                    // Restore on error
                     captureArea.style.width = originalWidth;
                     captureArea.style.maxWidth = originalMaxWidth;
                     captureArea.style.position = originalPosition;
